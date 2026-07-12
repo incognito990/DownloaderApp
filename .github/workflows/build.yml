@@ -1,18 +1,16 @@
 name: Build APK
-
 on: [push]
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: kivy/buildozer-action@v1
+      - name: Build with Buildozer
+        uses: docker://kivy/buildozer:latest
         with:
-          buildozer_version: master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/upload-artifact@v4
+          args: buildozer android debug
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
         with:
           name: package
-          path: output/*.apk
+          path: bin/*.apk
